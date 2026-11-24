@@ -40,9 +40,18 @@ class CartItemCard extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Image(image: image, width: 84, height: 72, fit: BoxFit.contain),
+          // Image and text share the row by proportion (2 : 5), so the image
+          // scales with the screen instead of using a fixed size.
+          Expanded(
+            flex: 2,
+            child: AspectRatio(
+              aspectRatio: 1,
+              child: Image(image: image, fit: BoxFit.contain),
+            ),
+          ),
           const SizedBox(width: 12),
           Expanded(
+            flex: 5,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -74,6 +83,8 @@ class CartItemCard extends StatelessWidget {
                 const SizedBox(height: 2),
                 Text(
                   details,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
                     fontSize: 11,
                     color: AppColors.textSecondary,

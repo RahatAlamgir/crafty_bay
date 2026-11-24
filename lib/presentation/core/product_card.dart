@@ -31,6 +31,10 @@ class ProductCard extends StatelessWidget {
   final VoidCallback? onTap;
   final VoidCallback? onWishTap;
 
+  static const double _titleFontSize = 11;
+  static const double _titleLineHeight = 1.3;
+  static const int _titleLines = 2;
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -72,14 +76,25 @@ class ProductCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    title,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      fontSize: 11,
-                      fontWeight: FontWeight.w500,
-                      color: AppColors.textPrimary,
+                  // Always reserves two lines, so a one-line title never makes
+                  // the card shorter than its neighbours. The height comes from
+                  // the font size and the user's text scale, not a fixed number.
+                  ConstrainedBox(
+                    constraints: BoxConstraints(
+                      minHeight: MediaQuery.textScalerOf(
+                        context,
+                      ).scale(_titleFontSize * _titleLineHeight * _titleLines),
+                    ),
+                    child: Text(
+                      title,
+                      maxLines: _titleLines,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        fontSize: _titleFontSize,
+                        height: _titleLineHeight,
+                        fontWeight: FontWeight.w500,
+                        color: AppColors.textPrimary,
+                      ),
                     ),
                   ),
                   const SizedBox(height: 6),
