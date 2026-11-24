@@ -15,6 +15,7 @@ import 'package:crafty_bay/presentation/feature/home/widgets/home_banner_carouse
 import 'package:crafty_bay/presentation/feature/home/widgets/home_category_section.dart';
 import 'package:crafty_bay/presentation/feature/home/widgets/home_product_section.dart';
 import 'package:crafty_bay/presentation/feature/home/widgets/home_search_bar.dart';
+import 'package:crafty_bay/presentation/feature/search/view/search_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -36,6 +37,13 @@ class _HomePageState extends State<HomePage> {
       Provider.of<BrandProvider>(context, listen: false).fetchBrands();
       Provider.of<ProductProvider>(context, listen: false).fetchProducts();
     });
+  }
+
+  void _openSearch(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const SearchPage()),
+    );
   }
 
   void _openCategories(BuildContext context) {
@@ -64,7 +72,7 @@ class _HomePageState extends State<HomePage> {
           children: [
             const HomeAppBar(),
             const SizedBox(height: 8),
-            const HomeSearchBar(),
+            HomeSearchBar(onTap: () => _openSearch(context)),
             const SizedBox(height: 16),
             const HomeBannerCarousel(),
             const SizedBox(height: 20),

@@ -59,6 +59,11 @@ class AppStrings {
   static const String complete = 'Complete';
   static const String fieldRequired = 'This field is required';
 
+  // --- Search ---
+  static const String searchProducts = 'Search products';
+  static const String searchPrompt = 'Type a product name to search';
+  static const String noProductsFound = 'No products found for';
+
   // --- Profile ---
   static const String profile = 'Profile';
   static const String editProfile = 'Edit Profile';
@@ -69,7 +74,8 @@ class AppStrings {
   static const String saveChanges = 'Save Changes';
   static const String profileUpdated = 'Profile updated';
   static const String phoneInvalid = 'Enter a valid mobile number';
-  static const String nameCannotChange = 'Name and email cannot be changed here';
+  static const String nameCannotChange =
+      'Name and email cannot be changed here';
 
   // --- Create review ---
   static const String createReview = 'Create Review';

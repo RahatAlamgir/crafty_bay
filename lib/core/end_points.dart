@@ -23,6 +23,7 @@ class EndPoints {
 
   // --- Products ---
   static String get products => '$baseUrl/products';
+  static String productsPage(int page) => '$baseUrl/products?page=$page';
   static String productBySlug(String slug) => '$baseUrl/products/$slug';
   static String productById(String id) => '$baseUrl/products/id/$id';
 
