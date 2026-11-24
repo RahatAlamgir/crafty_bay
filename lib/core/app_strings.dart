@@ -112,6 +112,19 @@ class AppStrings {
   static const String removedFromWishlist = 'Removed from wish list';
   static const String removedFromCart = 'Removed from cart';
 
+  // --- Confirm dialogs ---
+  static const String cancel = 'Cancel';
+  static const String add = 'Add';
+  static const String remove = 'Remove';
+  static const String addToCartTitle = 'Add to cart?';
+  static const String addToCartMessage = 'Add this item to your cart?';
+  static const String removeFromCartTitle = 'Remove from cart?';
+  static const String removeFromCartMessage =
+      'This item will be removed from your cart.';
+  static const String removeFromWishlistTitle = 'Remove from wish list?';
+  static const String removeFromWishlistMessage =
+      'This item will be removed from your wish list.';
+
   static const String retry = 'Retry';
 
   // --- Cart ---

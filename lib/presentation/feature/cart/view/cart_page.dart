@@ -1,6 +1,7 @@
 import 'package:crafty_bay/core/app_colors.dart';
 import 'package:crafty_bay/core/app_strings.dart';
 import 'package:crafty_bay/domain/entities/cart_item.dart';
+import 'package:crafty_bay/presentation/core/confirm_dialog.dart';
 import 'package:crafty_bay/presentation/core/image_source.dart';
 import 'package:crafty_bay/presentation/core/bottom_action_bar.dart';
 import 'package:crafty_bay/presentation/core/bottom_bar_button.dart';
@@ -59,6 +60,14 @@ class CartPage extends StatelessWidget {
     CartProvider cart,
     CartItem item,
   ) async {
+    final confirmed = await showConfirmDialog(
+      context,
+      title: AppStrings.removeFromCartTitle,
+      message: AppStrings.removeFromCartMessage,
+      confirmLabel: AppStrings.remove,
+      destructive: true,
+    );
+    if (!confirmed || !context.mounted) return;
     final ok = await cart.remove(item);
     if (!context.mounted) return;
     _showMessage(context, ok ? AppStrings.removedFromCart : cart.errorMessage);

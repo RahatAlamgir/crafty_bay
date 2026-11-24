@@ -1,5 +1,6 @@
 import 'package:crafty_bay/core/app_strings.dart';
 import 'package:crafty_bay/domain/entities/product.dart';
+import 'package:crafty_bay/presentation/core/confirm_dialog.dart';
 import 'package:crafty_bay/presentation/core/product_card.dart';
 import 'package:crafty_bay/presentation/core/product_grid_page.dart';
 import 'package:crafty_bay/presentation/core/product_section.dart';
@@ -40,9 +41,28 @@ class HomeApiProductSection extends StatelessWidget {
         price: '\$${p.currentPrice}',
         isWished: wishlist.isWished(p.id),
         onTap: () => _openDetails(context, p),
-        onWishTap: () => wishlist.toggle(p.id),
+        onWishTap: () => _onWishTap(context, wishlist, p),
       ),
     );
+  }
+
+  /// Adding is instant; removing a wished product asks first.
+  Future<void> _onWishTap(
+    BuildContext context,
+    WishlistProvider wishlist,
+    Product product,
+  ) async {
+    if (wishlist.isWished(product.id)) {
+      final confirmed = await showConfirmDialog(
+        context,
+        title: AppStrings.removeFromWishlistTitle,
+        message: AppStrings.removeFromWishlistMessage,
+        confirmLabel: AppStrings.remove,
+        destructive: true,
+      );
+      if (!confirmed) return;
+    }
+    await wishlist.toggle(product.id);
   }
 
   void _openAll(BuildContext context) {

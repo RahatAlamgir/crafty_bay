@@ -1,5 +1,7 @@
 import 'package:crafty_bay/core/app_colors.dart';
 import 'package:crafty_bay/core/app_strings.dart';
+import 'package:crafty_bay/domain/entities/wishlist_item.dart';
+import 'package:crafty_bay/presentation/core/confirm_dialog.dart';
 import 'package:crafty_bay/presentation/core/product_card.dart';
 import 'package:crafty_bay/presentation/core/product_grid_page.dart';
 import 'package:crafty_bay/presentation/feature/product_details/view/product_details_api_page.dart';
@@ -71,9 +73,25 @@ class WishlistPage extends StatelessWidget {
           price: '${AppStrings.currencySymbol}${product.currentPrice}',
           isWished: true,
           onTap: () => _openDetails(context, product.id),
-          onWishTap: () => wishlist.remove(items[i]),
+          onWishTap: () => _onRemove(context, wishlist, items[i]),
         );
       },
     );
+  }
+
+  Future<void> _onRemove(
+    BuildContext context,
+    WishlistProvider wishlist,
+    WishlistItem item,
+  ) async {
+    final confirmed = await showConfirmDialog(
+      context,
+      title: AppStrings.removeFromWishlistTitle,
+      message: AppStrings.removeFromWishlistMessage,
+      confirmLabel: AppStrings.remove,
+      destructive: true,
+    );
+    if (!confirmed) return;
+    await wishlist.remove(item);
   }
 }

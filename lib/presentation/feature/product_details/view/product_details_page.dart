@@ -3,6 +3,7 @@ import 'package:crafty_bay/core/app_strings.dart';
 import 'package:crafty_bay/presentation/core/bottom_action_bar.dart';
 import 'package:crafty_bay/presentation/core/bottom_bar_button.dart';
 import 'package:crafty_bay/presentation/core/bottom_bar_price.dart';
+import 'package:crafty_bay/presentation/core/confirm_dialog.dart';
 import 'package:crafty_bay/presentation/core/quantity_stepper.dart';
 import 'package:crafty_bay/presentation/feature/cart/provider/cart_provider.dart';
 import 'package:crafty_bay/presentation/feature/product_details/widgets/color_selector.dart';
@@ -53,6 +54,16 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
   Future<void> _onWishTap() async {
     final wishlist = context.read<WishlistProvider>();
     final wasWished = wishlist.isWished(widget.product.id);
+    if (wasWished) {
+      final confirmed = await showConfirmDialog(
+        context,
+        title: AppStrings.removeFromWishlistTitle,
+        message: AppStrings.removeFromWishlistMessage,
+        confirmLabel: AppStrings.remove,
+        destructive: true,
+      );
+      if (!confirmed || !mounted) return;
+    }
     final ok = await wishlist.toggle(widget.product.id);
     if (!mounted) return;
     _showMessage(
@@ -67,6 +78,13 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
   Future<void> _onAddToCart() async {
     final product = widget.product;
     final cart = context.read<CartProvider>();
+    final confirmed = await showConfirmDialog(
+      context,
+      title: AppStrings.addToCartTitle,
+      message: AppStrings.addToCartMessage,
+      confirmLabel: AppStrings.add,
+    );
+    if (!confirmed || !mounted) return;
     final ok = await cart.add(
       productId: product.id,
       quantity: _quantity,
