@@ -1,3 +1,4 @@
+import 'package:crafty_bay/presentation/core/app_image.dart';
 import 'package:crafty_bay/presentation/core/image_source.dart';
 import 'package:crafty_bay/presentation/core/page_indicator.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +27,7 @@ class _ProductImageCarouselState extends State<ProductImageCarousel> {
             onPageChanged: (i) => setState(() => _currentIndex = i),
             itemBuilder: (_, i) => Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: Image(
+              child: AppImage(
                 image: imageProviderFor(widget.imagePaths[i]),
                 fit: BoxFit.contain,
               ),

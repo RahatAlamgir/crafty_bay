@@ -1,6 +1,8 @@
 import 'package:crafty_bay/core/app_colors.dart';
 import 'package:flutter/material.dart';
 
+import 'app_image.dart';
+
 /// Reusable category tile: rounded icon box with the category name below.
 ///
 /// Used by Home and the Categories page. Receives all data and callbacks
@@ -42,15 +44,7 @@ class CategoryCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(16),
             ),
             padding: const EdgeInsets.all(12),
-            child: Image.network(
-              iconUrl,
-              fit: BoxFit.contain,
-              errorBuilder: (_, _, _) => const Icon(
-                Icons.image_not_supported_outlined,
-                size: 34,
-                color: AppColors.primary,
-              ),
-            ),
+            child: AppImage(image: NetworkImage(iconUrl), fit: BoxFit.contain),
           ),
           const SizedBox(height: 6),
           SizedBox(

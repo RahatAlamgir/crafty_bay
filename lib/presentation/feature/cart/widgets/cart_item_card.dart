@@ -1,4 +1,5 @@
 import 'package:crafty_bay/core/app_colors.dart';
+import 'package:crafty_bay/presentation/core/app_image.dart';
 import 'package:crafty_bay/presentation/core/quantity_stepper.dart';
 import 'package:flutter/material.dart';
 
@@ -46,7 +47,7 @@ class CartItemCard extends StatelessWidget {
             flex: 2,
             child: AspectRatio(
               aspectRatio: 1,
-              child: Image(image: image, fit: BoxFit.contain),
+              child: AppImage(image: image, fit: BoxFit.contain),
             ),
           ),
           const SizedBox(width: 12),

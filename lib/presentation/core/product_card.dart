@@ -1,6 +1,8 @@
 import 'package:crafty_bay/core/app_colors.dart';
 import 'package:flutter/material.dart';
 
+import 'app_image.dart';
+
 /// Reusable product tile: image, title, price, rating and wishlist button.
 ///
 /// Used by Home, Product list, Wishlist, etc. Receives all data and
@@ -67,7 +69,7 @@ class ProductCard extends StatelessWidget {
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(12.0),
-                  child: Image(image: image, fit: BoxFit.cover),
+                  child: AppImage(image: image),
                 ),
               ),
             ),
