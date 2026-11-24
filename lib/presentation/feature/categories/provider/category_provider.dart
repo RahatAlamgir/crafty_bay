@@ -1,30 +1,18 @@
 import 'package:crafty_bay/data/service/category_service.dart';
 import 'package:crafty_bay/domain/entities/category.dart';
-import 'package:flutter/foundation.dart' show ChangeNotifier;
+import 'package:crafty_bay/domain/entities/page_result.dart';
+import 'package:crafty_bay/presentation/core/paged_provider.dart';
 
-class CategoryProvider extends ChangeNotifier {
+/// Categories, loaded page by page. Shared by the Home row (which shows what
+/// is loaded so far) and the Categories page (which loads more as you scroll).
+class CategoryProvider extends PagedProvider<Category> {
   final _service = CategoryService();
 
-  List<Category> _categories = [];
-  List<Category> get categories => _categories;
+  List<Category> get categories => items;
 
-  bool _isLoading = false;
-  bool get isLoading => _isLoading;
+  Future<void> fetchCategories() => fetchFirstPage();
 
-  String _errorMessage = '';
-  String get errorMessage => _errorMessage;
-
-  Future<void> fetchCategories() async {
-    _isLoading = true;
-    notifyListeners();
-    try {
-      _categories = await _service.getCategories();
-      _errorMessage = '';
-    } catch (e) {
-      _errorMessage = e.toString();
-    } finally {
-      _isLoading = false;
-      notifyListeners();
-    }
-  }
+  @override
+  Future<PageResult<Category>> loadPage(int page) =>
+      _service.getCategoryPage(page);
 }

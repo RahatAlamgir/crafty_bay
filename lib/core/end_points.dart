@@ -19,11 +19,22 @@ class EndPoints {
   // --- Home ---
   static String get slides => '$baseUrl/slides';
   static String get brands => '$baseUrl/brands';
+  static String brandsPage(int page) => '$baseUrl/brands?page=$page';
   static String get categories => '$baseUrl/categories';
+  static String categoriesPage(int page) => '$baseUrl/categories?page=$page';
 
   // --- Products ---
   static String get products => '$baseUrl/products';
-  static String productsPage(int page) => '$baseUrl/products?page=$page';
+  /// One page of products, optionally only those of a category and/or brand.
+  static String productsPage(int page, {String? categoryId, String? brandId}) {
+    final query = {
+      'page': '$page',
+      'category': ?categoryId,
+      'brand': ?brandId,
+    };
+
+    return Uri.parse('$baseUrl/products').replace(queryParameters: query).toString();
+  }
   static String productBySlug(String slug) => '$baseUrl/products/$slug';
   static String productById(String id) => '$baseUrl/products/id/$id';
 
@@ -36,10 +47,12 @@ class EndPoints {
 
   // --- Cart ---
   static String get cart => '$baseUrl/cart'; // GET, POST
+  static String cartPage(int page) => '$baseUrl/cart?page=$page';
   static String cartItem(String id) => '$baseUrl/cart/$id'; // PATCH, DELETE
 
   // --- Wishlist ---
   static String get wishlist => '$baseUrl/wishlist'; // GET, POST
+  static String wishlistPage(int page) => '$baseUrl/wishlist?page=$page';
   static String wishlistItem(String id) => '$baseUrl/wishlist/$id'; // DELETE
 
   // --- Orders ---

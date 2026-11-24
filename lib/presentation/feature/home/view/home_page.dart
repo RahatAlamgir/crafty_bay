@@ -9,7 +9,9 @@ import 'package:crafty_bay/presentation/feature/home/provider/slide_provider.dar
 import 'package:crafty_bay/presentation/feature/home/widgets/home_api_product_section.dart';
 import 'package:crafty_bay/presentation/feature/home/widgets/home_brand_section.dart';
 import 'package:crafty_bay/presentation/feature/categories/view/categories_page.dart';
-import 'package:crafty_bay/presentation/feature/categories/view/category_products_page.dart';
+import 'package:crafty_bay/domain/entities/brand.dart';
+import 'package:crafty_bay/presentation/feature/brands/view/brands_page.dart';
+import 'package:crafty_bay/presentation/feature/product_list/view/product_list_page.dart';
 import 'package:crafty_bay/presentation/feature/home/widgets/home_app_bar.dart';
 import 'package:crafty_bay/presentation/feature/home/widgets/home_banner_carousel.dart';
 import 'package:crafty_bay/presentation/feature/home/widgets/home_category_section.dart';
@@ -59,7 +61,24 @@ class _HomePageState extends State<HomePage> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (_) => CategoryProductsPage(category: category),
+        builder: (_) =>
+            ProductListPage(title: category.title, categoryId: category.id),
+      ),
+    );
+  }
+
+  void _openBrands(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const BrandsPage()),
+    );
+  }
+
+  void _openBrand(BuildContext context, Brand brand) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => ProductListPage(title: brand.title, brandId: brand.id),
       ),
     );
   }
@@ -104,7 +123,11 @@ class _HomePageState extends State<HomePage> {
                   );
                 }
 
-                return HomeBrandSection(brands: provider.brands);
+                return HomeBrandSection(
+                  brands: provider.brands,
+                  onSeeAllTap: () => _openBrands(context),
+                  onBrandTap: (b) => _openBrand(context, b),
+                );
               },
             ),
             Consumer<ProductProvider>(

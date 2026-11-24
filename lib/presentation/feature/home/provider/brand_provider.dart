@@ -1,30 +1,16 @@
 import 'package:crafty_bay/data/service/brand_service.dart';
 import 'package:crafty_bay/domain/entities/brand.dart';
-import 'package:flutter/foundation.dart';
+import 'package:crafty_bay/domain/entities/page_result.dart';
+import 'package:crafty_bay/presentation/core/paged_provider.dart';
 
-class BrandProvider extends ChangeNotifier {
+/// Brands, loaded page by page. Shared by the Home row and the Brands page.
+class BrandProvider extends PagedProvider<Brand> {
   final _service = BrandService();
 
-  List<Brand> _brands = [];
-  List<Brand> get brands => _brands;
+  List<Brand> get brands => items;
 
-  bool _isLoading = false;
-  bool get isLoading => _isLoading;
+  Future<void> fetchBrands() => fetchFirstPage();
 
-  String _errorMessage = '';
-  String get errorMessage => _errorMessage;
-
-  Future<void> fetchBrands() async {
-    _isLoading = true;
-    notifyListeners();
-    try {
-      _brands = await _service.getBrands();
-      _errorMessage = '';
-    } catch (e) {
-      _errorMessage = e.toString();
-    } finally {
-      _isLoading = false;
-      notifyListeners();
-    }
-  }
+  @override
+  Future<PageResult<Brand>> loadPage(int page) => _service.getBrandPage(page);
 }

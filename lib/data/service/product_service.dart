@@ -3,17 +3,10 @@ import 'dart:convert';
 import '../../core/end_points.dart';
 import '../../domain/entities/product.dart';
 import '../../domain/entities/product_details.dart';
+import '../../domain/entities/page_result.dart';
 import '../model/product_details_model.dart';
 import '../model/product_model.dart';
 import 'network/network_caller.dart';
-
-/// One page of the products list, plus how many pages exist.
-class _ProductPage {
-  final List<Product> products;
-  final int lastPage;
-
-  _ProductPage({required this.products, required this.lastPage});
-}
 
 class ProductService {
   final _networkCaller = NetworkCaller();
@@ -32,20 +25,31 @@ class ProductService {
         .toList();
   }
 
-  /// Every product, all pages. The server has no text search, so the app
-  /// loads the whole catalogue once and filters it on the phone.
+  /// The whole catalogue, all pages at once.
+  ///
+  /// Only Search uses this, because the server has no text search and the
+  /// app has to filter on the phone. Product lists load page by page with
+  /// [getProductPage] instead.
   Future<List<Product>> getAllProducts() async {
-    final first = await _getPage(1);
-    final pages = await Future.wait([
-      for (var page = 2; page <= first.lastPage; page++) _getPage(page),
+    final first = await getProductPage(1);
+    final rest = await Future.wait([
+      for (var n = 2; n <= first.lastPage; n++) getProductPage(n),
     ]);
 
-    return [first, ...pages].expand((p) => p.products).toList();
+    return [first, ...rest].expand((p) => p.items).toList();
   }
 
-  Future<_ProductPage> _getPage(int page) async {
+  /// One page (10 products). Pass [categoryId] and/or [brandId] to get only
+  /// the products of that category or brand (the server filters them).
+  Future<PageResult<Product>> getProductPage(
+    int page, {
+    String? categoryId,
+    String? brandId,
+  }) async {
     final response = await _networkCaller.get(
-      Uri.parse(EndPoints.productsPage(page)),
+      Uri.parse(
+        EndPoints.productsPage(page, categoryId: categoryId, brandId: brandId),
+      ),
       headers: {'accept': 'application/json'},
     );
     if (response.isSuccess != true) {
@@ -53,8 +57,8 @@ class ProductService {
     }
     final data = jsonDecode(response.body!)['data'];
 
-    return _ProductPage(
-      products: (data['results'] as List)
+    return PageResult(
+      items: (data['results'] as List)
           .map((e) => ProductModel.fromJson(e))
           .toList(),
       lastPage: (data['last_page'] as num?)?.toInt() ?? 1,

@@ -67,6 +67,10 @@ class AppStrings {
   static const String reviewsNotForSample =
       'Reviews are not available for sample products';
 
+  // --- Brands and categories ---
+  static const String brands = 'Brands';
+  static const String noProductsHere = 'No products found here yet';
+
   // --- Search ---
   static const String searchProducts = 'Search products';
   static const String searchPrompt = 'Type a product name to search';
