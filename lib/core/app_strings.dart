@@ -59,6 +59,14 @@ class AppStrings {
   static const String complete = 'Complete';
   static const String fieldRequired = 'This field is required';
 
+  // --- Reviews ---
+  static const String noReviewsYet = 'No reviews yet. Be the first to review!';
+  static const String yourRating = 'Your rating';
+  static const String ratingRequired = 'Please choose a star rating';
+  static const String reviewSubmitted = 'Review submitted';
+  static const String reviewsNotForSample =
+      'Reviews are not available for sample products';
+
   // --- Search ---
   static const String searchProducts = 'Search products';
   static const String searchPrompt = 'Type a product name to search';

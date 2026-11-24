@@ -28,13 +28,17 @@ class ProductDetailsUiModel {
   final List<String> colorNames;
   final List<String> sizes;
 
-  /// Builds the page model from API data. The API has no rating yet, so it is 0.
-  factory ProductDetailsUiModel.fromEntity(ProductDetails p) {
+  /// Builds the page model from API data. The product itself has no rating,
+  /// so the caller passes the average of its reviews as [rating].
+  factory ProductDetailsUiModel.fromEntity(
+    ProductDetails p, {
+    double rating = 0,
+  }) {
     return ProductDetailsUiModel(
       id: p.id,
       title: p.title,
       price: p.currentPrice.toDouble(),
-      rating: 0,
+      rating: rating,
       description: p.description,
       imagePaths: p.photos,
       colors: [for (final c in p.colors) _colorFromName(c)],

@@ -2,6 +2,7 @@ import 'package:crafty_bay/core/app_colors.dart';
 import 'package:crafty_bay/core/app_strings.dart';
 import 'package:crafty_bay/presentation/feature/product_details/provider/product_details_provider.dart';
 import 'package:crafty_bay/presentation/feature/product_details/view/product_details_page.dart';
+import 'package:crafty_bay/presentation/feature/reviews/provider/review_provider.dart';
 import 'package:crafty_bay/presentation/model/product_details_ui_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -15,14 +16,28 @@ class ProductDetailsApiPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => ProductDetailsProvider()..fetchProduct(productId),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => ProductDetailsProvider()..fetchProduct(productId),
+        ),
+        // Loaded here so the rating shows on this page, and shared with the
+        // Reviews page so both always agree.
+        ChangeNotifierProvider(
+          create: (_) => ReviewProvider(productId: productId)..fetchReviews(),
+        ),
+      ],
       child: Consumer<ProductDetailsProvider>(
         builder: (context, provider, _) {
           final product = provider.product;
           if (product != null) {
+            final rating = context.watch<ReviewProvider>().averageRating;
+
             return ProductDetailsPage(
-              product: ProductDetailsUiModel.fromEntity(product),
+              product: ProductDetailsUiModel.fromEntity(
+                product,
+                rating: rating,
+              ),
             );
           }
 

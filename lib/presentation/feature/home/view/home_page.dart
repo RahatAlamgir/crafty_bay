@@ -15,6 +15,7 @@ import 'package:crafty_bay/presentation/feature/home/widgets/home_banner_carouse
 import 'package:crafty_bay/presentation/feature/home/widgets/home_category_section.dart';
 import 'package:crafty_bay/presentation/feature/home/widgets/home_product_section.dart';
 import 'package:crafty_bay/presentation/feature/home/widgets/home_search_bar.dart';
+import 'package:crafty_bay/presentation/feature/reviews/provider/rating_provider.dart';
 import 'package:crafty_bay/presentation/feature/search/view/search_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -36,6 +37,7 @@ class _HomePageState extends State<HomePage> {
       Provider.of<CategoryProvider>(context, listen: false).fetchCategories();
       Provider.of<BrandProvider>(context, listen: false).fetchBrands();
       Provider.of<ProductProvider>(context, listen: false).fetchProducts();
+      Provider.of<RatingProvider>(context, listen: false).fetchRatings();
     });
   }
 

@@ -10,6 +10,7 @@ import 'package:crafty_bay/presentation/feature/product_details/widgets/color_se
 import 'package:crafty_bay/presentation/feature/product_details/widgets/product_image_carousel.dart';
 import 'package:crafty_bay/presentation/feature/product_details/widgets/product_rating_row.dart';
 import 'package:crafty_bay/presentation/feature/product_details/widgets/size_selector.dart';
+import 'package:crafty_bay/presentation/feature/reviews/provider/review_provider.dart';
 import 'package:crafty_bay/presentation/feature/reviews/view/reviews_page.dart';
 import 'package:crafty_bay/presentation/feature/wishlist/provider/wishlist_provider.dart';
 import 'package:crafty_bay/presentation/model/product_details_ui_model.dart';
@@ -39,9 +40,23 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
   int _sizeIndex = 0;
 
   void _onReviewsTap() {
+    final productId = widget.product.id;
+    // Sample products have no id, so they have no reviews on the server.
+    if (productId.isEmpty) {
+      _showMessage(AppStrings.reviewsNotForSample);
+      return;
+    }
+    // Hands the details page's review list to the Reviews page, so a new
+    // review updates the rating shown here too.
+    final reviews = context.read<ReviewProvider>();
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (_) => const ReviewsPage()),
+      MaterialPageRoute(
+        builder: (_) => ChangeNotifierProvider.value(
+          value: reviews,
+          child: const ReviewsPage(),
+        ),
+      ),
     );
   }
 

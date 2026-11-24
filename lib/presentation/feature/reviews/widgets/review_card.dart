@@ -1,12 +1,23 @@
 import 'package:crafty_bay/core/app_colors.dart';
 import 'package:flutter/material.dart';
 
-/// Card showing one review: reviewer avatar + name, then the comment text.
+import 'star_rating.dart';
+
+/// Card showing one review: reviewer avatar + name, the star rating, then the
+/// comment text.
 class ReviewCard extends StatelessWidget {
-  const ReviewCard({super.key, required this.name, required this.comment});
+  const ReviewCard({
+    super.key,
+    required this.name,
+    required this.comment,
+    this.rating,
+  });
 
   final String name;
   final String comment;
+
+  /// Hidden when null.
+  final double? rating;
 
   @override
   Widget build(BuildContext context) {
@@ -56,11 +67,15 @@ class ReviewCard extends StatelessWidget {
               ),
             ],
           ),
+          if (rating != null) ...[
+            const SizedBox(height: 8),
+            StarRating(rating: rating!),
+          ],
           const SizedBox(height: 8),
           Text(
             comment,
             style: const TextStyle(
-              fontSize: 8,
+              fontSize: 13,
               height: 1.4,
               color: AppColors.textSecondary,
             ),

@@ -24,7 +24,7 @@ class ProductRatingRow extends StatelessWidget {
         const Icon(Icons.star, size: 20, color: AppColors.accent),
         const SizedBox(width: 4),
         Text(
-          rating.toString(),
+          rating.toStringAsFixed(1),
           style: const TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w500,

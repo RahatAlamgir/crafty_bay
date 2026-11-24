@@ -3,6 +3,7 @@ import 'package:crafty_bay/domain/entities/product.dart';
 import 'package:crafty_bay/presentation/core/confirm_dialog.dart';
 import 'package:crafty_bay/presentation/core/product_card.dart';
 import 'package:crafty_bay/presentation/feature/product_details/view/product_details_api_page.dart';
+import 'package:crafty_bay/presentation/feature/reviews/provider/rating_provider.dart';
 import 'package:crafty_bay/presentation/feature/wishlist/provider/wishlist_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -50,14 +51,16 @@ class ApiProductCard extends StatelessWidget {
   Widget build(BuildContext context) {
     // Consumer (not context.watch) because this can build inside a pushed
     // route, where the parent widget's own context is not rebuilding.
-    return Consumer<WishlistProvider>(
-      builder: (context, wishlist, _) => ProductCard(
+    return Consumer2<WishlistProvider, RatingProvider>(
+      builder: (context, wishlist, ratings, _) => ProductCard(
         width: width,
         image: NetworkImage(
           product.photos.isNotEmpty ? product.photos.first : '',
         ),
         title: product.title,
         price: '${AppStrings.currencySymbol}${product.currentPrice}',
+        // null (no reviews yet) hides the rating on the card.
+        rating: ratings.ratingFor(product.id),
         isWished: wishlist.isWished(product.id),
         onTap: () => _openDetails(context),
         onWishTap: () => _onWishTap(context, wishlist),

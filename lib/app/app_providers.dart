@@ -5,6 +5,7 @@ import 'package:crafty_bay/presentation/feature/home/provider/brand_provider.dar
 import 'package:crafty_bay/presentation/feature/home/provider/product_provider.dart';
 import 'package:crafty_bay/presentation/feature/home/provider/slide_provider.dart';
 import 'package:crafty_bay/presentation/feature/profile/provider/profile_provider.dart';
+import 'package:crafty_bay/presentation/feature/reviews/provider/rating_provider.dart';
 import 'package:crafty_bay/presentation/feature/search/provider/search_provider.dart';
 import 'package:crafty_bay/presentation/feature/wishlist/provider/wishlist_provider.dart';
 import 'package:provider/provider.dart';
@@ -24,5 +25,6 @@ class AppProviders {
     ChangeNotifierProvider(create: (_) => BrandProvider()),
     ChangeNotifierProvider(create: (_) => ProductProvider()),
     ChangeNotifierProvider(create: (_) => SearchProvider()),
+    ChangeNotifierProvider(create: (_) => RatingProvider()),
   ];
 }

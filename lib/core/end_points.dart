@@ -29,6 +29,8 @@ class EndPoints {
 
   // --- Reviews ---
   static String get reviews => '$baseUrl/reviews'; // GET ?product=<id>
+  static String reviewsPage(String productId, int page) =>
+      '$baseUrl/reviews?product=$productId&page=$page';
   static String get createReview => '$baseUrl/review';
   static String review(String id) => '$baseUrl/reviews/$id'; // PATCH, DELETE
 
