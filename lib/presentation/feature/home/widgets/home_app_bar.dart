@@ -3,6 +3,8 @@ import 'package:crafty_bay/presentation/feature/auth/auth_redirect.dart';
 import 'package:crafty_bay/presentation/feature/auth/provider/auth_provider.dart';
 import 'package:crafty_bay/presentation/feature/cart/provider/cart_provider.dart';
 import 'package:crafty_bay/presentation/feature/home/widgets/home_circle_icon_button.dart';
+import 'package:crafty_bay/presentation/feature/profile/provider/profile_provider.dart';
+import 'package:crafty_bay/presentation/feature/profile/view/profile_page.dart';
 import 'package:crafty_bay/presentation/feature/wishlist/provider/wishlist_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -12,13 +14,22 @@ import 'package:provider/provider.dart';
 class HomeAppBar extends StatelessWidget {
   const HomeAppBar({super.key});
 
+  void _onProfile(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const ProfilePage()),
+    );
+  }
+
   Future<void> _onLogout(BuildContext context) async {
     final auth = context.read<AuthProvider>();
     final cart = context.read<CartProvider>();
     final wishlist = context.read<WishlistProvider>();
+    final profile = context.read<ProfileProvider>();
     await auth.logout();
     cart.clear();
     wishlist.clear();
+    profile.clear();
     AuthRedirect.toLogin();
   }
 
@@ -30,7 +41,10 @@ class HomeAppBar extends StatelessWidget {
         children: [
           SvgPicture.asset(AppAssets.logoNav, height: 28),
           const Spacer(),
-          const HomeCircleIconButton(icon: Icons.person_outline),
+          HomeCircleIconButton(
+            icon: Icons.person_outline,
+            onTap: () => _onProfile(context),
+          ),
           const SizedBox(width: 8),
           const HomeCircleIconButton(icon: Icons.call_outlined),
           const SizedBox(width: 8),

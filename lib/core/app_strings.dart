@@ -41,6 +41,9 @@ class AppStrings {
   static const String enterOtpCode = 'Enter OTP Code';
   static const String otpSentMessage = 'A 4 Digit OTP Code has been Sent';
   static const String otpIncomplete = 'Please enter the 4 digit code';
+
+  /// Text the server's login error contains when the email isn't verified yet.
+  static const String emailNotVerifiedMarker = 'not verified';
   static const String codeExpiresIn = 'This code will expire in ';
   static const String resendCode = 'Resend Code';
 
@@ -55,6 +58,18 @@ class AppStrings {
   static const String shippingAddress = 'Shipping Address';
   static const String complete = 'Complete';
   static const String fieldRequired = 'This field is required';
+
+  // --- Profile ---
+  static const String profile = 'Profile';
+  static const String editProfile = 'Edit Profile';
+  static const String email = 'Email';
+  static const String notAdded = 'Not added';
+  static const String verified = 'Verified';
+  static const String notVerified = 'Not verified';
+  static const String saveChanges = 'Save Changes';
+  static const String profileUpdated = 'Profile updated';
+  static const String phoneInvalid = 'Enter a valid mobile number';
+  static const String nameCannotChange = 'Name and email cannot be changed here';
 
   // --- Create review ---
   static const String createReview = 'Create Review';

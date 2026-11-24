@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import '../../core/end_points.dart';
+import '../../domain/entities/user_profile.dart';
+import '../model/user_profile_model.dart';
 import 'network/auth_headers.dart';
 import 'network/network_caller.dart';
 import 'network/network_response.dart';
@@ -75,16 +77,36 @@ class AuthService {
     _throwIfFailed(response);
   }
 
+  /// Loads the signed-in user's profile. Needs the login token.
+  Future<UserProfile> getProfile() async {
+    final response = await _networkCaller.get(
+      Uri.parse(EndPoints.profile),
+      headers: AuthHeaders.build(),
+    );
+    _throwIfFailed(response);
+    final json = jsonDecode(response.body!);
+    // The user may sit at `data`, or at `data.user`.
+    final data = json is Map ? json['data'] : null;
+    final user = data is Map ? (data['user'] ?? data) : null;
+    if (user is! Map<String, dynamic>) {
+      throw Exception('Profile came back in an unexpected format');
+    }
+
+    return UserProfileModel.fromJson(user);
+  }
+
   /// Saves the extra profile details. Needs the login token.
+  ///
+  /// The server only accepts `phone` and `city`; any other key (such as a
+  /// shipping address) is rejected with "Unexpected key".
   Future<void> updateProfile({
     required String phone,
     required String city,
-    required String shippingAddress,
   }) async {
     final response = await _networkCaller.patch(
       Uri.parse(EndPoints.profile),
       headers: AuthHeaders.build(),
-      body: {'phone': phone, 'city': city, 'shipping_address': shippingAddress},
+      body: {'phone': phone, 'city': city},
     );
     _throwIfFailed(response);
   }

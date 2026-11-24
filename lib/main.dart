@@ -15,6 +15,7 @@ import 'presentation/feature/cart/provider/cart_provider.dart';
 import 'presentation/feature/categories/provider/category_provider.dart';
 import 'presentation/feature/home/provider/product_provider.dart';
 import 'presentation/feature/home/provider/slide_provider.dart';
+import 'presentation/feature/profile/provider/profile_provider.dart';
 import 'presentation/feature/splash/view/splash_page.dart';
 import 'presentation/feature/wishlist/provider/wishlist_provider.dart';
 
@@ -37,6 +38,7 @@ class CraftyBayApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (_) => CartProvider()),
         ChangeNotifierProvider(create: (_) => WishlistProvider()),
+        ChangeNotifierProvider(create: (_) => ProfileProvider()),
         ChangeNotifierProvider(create: (_) => SlideProvider()),
         ChangeNotifierProvider(create: (_) => CategoryProvider()),
         ChangeNotifierProvider(create: (_) => BrandProvider()),
@@ -46,9 +48,13 @@ class CraftyBayApp extends StatelessWidget {
         navigatorKey: AppNavigator.key,
         title: AppStrings.appName,
         debugShowCheckedModeBanner: false,
-        darkTheme: ThemeData.dark(),
+        // The app's colors are light-only; never switch to a dark theme.
+        themeMode: ThemeMode.light,
         theme: ThemeData(
-          textTheme: GoogleFonts.poppinsTextTheme(),
+          textTheme: GoogleFonts.poppinsTextTheme().copyWith(
+            // Text typed into input fields uses bodyLarge.
+            bodyLarge: GoogleFonts.poppins(color: AppColors.inputText),
+          ),
           scaffoldBackgroundColor: AppColors.background,
           appBarTheme: const AppBarTheme(
             backgroundColor: AppColors.background,
@@ -69,7 +75,7 @@ class CraftyBayApp extends StatelessWidget {
           inputDecorationTheme: InputDecorationTheme(
             filled: true,
             fillColor: AppColors.background,
-            hintStyle: const TextStyle(color: AppColors.textHint),
+            hintStyle: const TextStyle(color: AppColors.inputHint),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
               borderSide: const BorderSide(color: AppColors.border),

@@ -60,15 +60,8 @@ class AuthProvider extends ChangeNotifier {
   Future<bool> updateProfile({
     required String phone,
     required String city,
-    required String shippingAddress,
   }) {
-    return _run(
-      () => _service.updateProfile(
-        phone: phone,
-        city: city,
-        shippingAddress: shippingAddress,
-      ),
-    );
+    return _run(() => _service.updateProfile(phone: phone, city: city));
   }
 
   Future<bool> _run(Future<void> Function() action) async {

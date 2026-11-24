@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 
 import '../../auth_redirect.dart';
 import '../../auth_validators.dart';
+import '../../otp_verfication/view/otp_verification_page.dart';
 import '../../provider/auth_provider.dart';
 import '../../sign_up/view/sign_up_page.dart';
 import '../widgets/login_header.dart';
@@ -41,11 +42,14 @@ class _LoginPageState extends State<LoginPage> {
   Future<void> _onLogin() async {
     if (!_formKey.currentState!.validate()) return;
     final auth = context.read<AuthProvider>();
-    final ok = await auth.login(
-      email: _emailController.text.trim(),
-      password: _passwordController.text,
-    );
+    final email = _emailController.text.trim();
+    final password = _passwordController.text;
+    final ok = await auth.login(email: email, password: password);
     if (!mounted) return;
+    if (!ok && _isEmailNotVerified(auth.errorMessage)) {
+      await _openOtpScreen(auth, email, password);
+      return;
+    }
     if (!ok) {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text(auth.errorMessage)));
@@ -55,6 +59,31 @@ class _LoginPageState extends State<LoginPage> {
       context,
       MaterialPageRoute(builder: (_) => const MainPage()),
       (_) => false,
+    );
+  }
+
+  bool _isEmailNotVerified(String message) => message
+      .toLowerCase()
+      .contains(AppStrings.emailNotVerifiedMarker);
+
+  /// Sends a fresh OTP, then lets the user verify the account they just tried.
+  Future<void> _openOtpScreen(
+    AuthProvider auth,
+    String email,
+    String password,
+  ) async {
+    final sent = await auth.resendOtp(email);
+    if (!mounted) return;
+    if (!sent) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(auth.errorMessage)));
+      return;
+    }
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => OtpVerificationPage(email: email, password: password),
+      ),
     );
   }
 

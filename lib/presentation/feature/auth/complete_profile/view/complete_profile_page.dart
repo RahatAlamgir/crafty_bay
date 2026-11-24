@@ -45,7 +45,6 @@ class _CompleteProfilePageState extends State<CompleteProfilePage> {
     final ok = await auth.updateProfile(
       phone: _mobileController.text.trim(),
       city: _cityController.text.trim(),
-      shippingAddress: _addressController.text.trim(),
     );
     if (!mounted) return;
     if (!ok) {

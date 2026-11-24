@@ -25,6 +25,8 @@ class AppColors {
   static const Color textSecondary = Color(0xFF8A8A8A);
   static const Color textHint = Color(0xFFB0B0B0);
   static const Color textOnPrimary = Color(0xFFFFFFFF);
+  static const Color inputText = Color(0xFF121212);
+  static const Color inputHint = Color(0xFF6B6B6B);
 
   // --- Feedback ---
   static const Color accent = Color(0xFFFFC107);
