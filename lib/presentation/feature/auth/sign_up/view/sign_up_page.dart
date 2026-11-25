@@ -6,8 +6,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
 import '../../auth_validators.dart';
-import '../../complete_profile/widget/profile_text_field.dart';
-import '../../otp_verfication/view/otp_verification_page.dart';
+import '../../complete_profile/widgets/profile_text_field.dart';
+import '../../otp_verification/view/otp_verification_page.dart';
 import '../../provider/auth_provider.dart';
 
 /// Creates the account (name, email, password), then asks for the emailed OTP.

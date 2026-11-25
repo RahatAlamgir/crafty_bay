@@ -21,10 +21,12 @@ class ProfileEditPage extends StatefulWidget {
 
 class _ProfileEditPageState extends State<ProfileEditPage> {
   final _formKey = GlobalKey<FormState>();
-  late final _mobileController =
-      TextEditingController(text: widget.profile.phone ?? '');
-  late final _cityController =
-      TextEditingController(text: widget.profile.city ?? '');
+  late final _mobileController = TextEditingController(
+    text: widget.profile.phone ?? '',
+  );
+  late final _cityController = TextEditingController(
+    text: widget.profile.city ?? '',
+  );
 
   @override
   void dispose() {
@@ -58,7 +60,8 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
     );
     if (!mounted) return;
     final message = ok ? AppStrings.profileUpdated : provider.errorMessage;
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(message)));
     if (ok) Navigator.pop(context);
   }
 
@@ -108,7 +111,9 @@ class _ProfileEditPageState extends State<ProfileEditPage> {
                     FilteringTextInputFormatter.allow(RegExp(r'[0-9+]')),
                   ],
                   validator: _validateMobile,
-                  decoration: const InputDecoration(hintText: AppStrings.mobile),
+                  decoration: const InputDecoration(
+                    hintText: AppStrings.mobile,
+                  ),
                 ),
                 const SizedBox(height: 12),
                 TextFormField(

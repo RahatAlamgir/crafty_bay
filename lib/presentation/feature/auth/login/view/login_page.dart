@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 
 import '../../auth_redirect.dart';
 import '../../auth_validators.dart';
-import '../../otp_verfication/view/otp_verification_page.dart';
+import '../../otp_verification/view/otp_verification_page.dart';
 import '../../provider/auth_provider.dart';
 import '../../sign_up/view/sign_up_page.dart';
 import '../widgets/login_header.dart';
@@ -62,9 +62,8 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  bool _isEmailNotVerified(String message) => message
-      .toLowerCase()
-      .contains(AppStrings.emailNotVerifiedMarker);
+  bool _isEmailNotVerified(String message) =>
+      message.toLowerCase().contains(AppStrings.emailNotVerifiedMarker);
 
   /// Sends a fresh OTP, then lets the user verify the account they just tried.
   Future<void> _openOtpScreen(

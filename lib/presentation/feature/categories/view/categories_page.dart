@@ -2,6 +2,7 @@ import 'package:crafty_bay/core/app_strings.dart';
 import 'package:crafty_bay/domain/entities/category.dart';
 import 'package:crafty_bay/presentation/core/paged_footer.dart';
 import 'package:crafty_bay/presentation/core/tile_grid_page.dart';
+import 'package:crafty_bay/presentation/core/tile_item.dart';
 import 'package:crafty_bay/presentation/feature/categories/provider/category_provider.dart';
 import 'package:crafty_bay/presentation/feature/product_list/view/product_list_page.dart';
 import 'package:flutter/material.dart';

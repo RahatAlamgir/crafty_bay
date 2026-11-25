@@ -17,9 +17,6 @@ class ProductListProvider extends PagedProvider<Product> {
   Future<void> fetchProducts() => fetchFirstPage();
 
   @override
-  Future<PageResult<Product>> loadPage(int page) => _service.getProductPage(
-    page,
-    categoryId: categoryId,
-    brandId: brandId,
-  );
+  Future<PageResult<Product>> loadPage(int page) =>
+      _service.getProductPage(page, categoryId: categoryId, brandId: brandId);
 }

@@ -1,18 +1,11 @@
 import 'dart:convert';
 
 import '../../core/end_points.dart';
+import '../../domain/entities/page_result.dart';
 import '../../domain/entities/review.dart';
 import '../model/review_model.dart';
 import 'network/auth_headers.dart';
 import 'network/network_caller.dart';
-
-/// One page of the reviews list, plus how many pages exist.
-class _ReviewPage {
-  final List<Review> reviews;
-  final int lastPage;
-
-  _ReviewPage({required this.reviews, required this.lastPage});
-}
 
 class ReviewService {
   final _networkCaller = NetworkCaller();
@@ -63,7 +56,7 @@ class ReviewService {
     final rest = await Future.wait([
       for (var page = 2; page <= first.lastPage; page++) _getPage(page),
     ]);
-    final all = [first, ...rest].expand((p) => p.reviews).toList();
+    final all = [first, ...rest].expand((p) => p.items).toList();
     _cache = all;
     _cachedAt = DateTime.now();
 
@@ -86,7 +79,7 @@ class ReviewService {
     _cachedAt = null;
   }
 
-  Future<_ReviewPage> _getPage(int page) async {
+  Future<PageResult<Review>> _getPage(int page) async {
     final response = await _networkCaller.get(
       Uri.parse(EndPoints.reviewsPage(_anyProduct, page, count: _pageSize)),
       headers: {'accept': 'application/json'},
@@ -94,8 +87,8 @@ class ReviewService {
     if (response.isSuccess != true) throw Exception(response.errorMessage);
     final data = jsonDecode(response.body!)['data'];
 
-    return _ReviewPage(
-      reviews: (data['results'] as List)
+    return PageResult<Review>(
+      items: (data['results'] as List)
           .whereType<Map<String, dynamic>>()
           .map(ReviewModel.fromJson)
           .toList(),

@@ -1,4 +1,5 @@
 import 'package:crafty_bay/core/app_colors.dart';
+import 'package:crafty_bay/presentation/core/app_image_placeholder.dart';
 import 'package:flutter/material.dart';
 
 /// An image that shows a placeholder while it loads and when it fails
@@ -25,43 +26,11 @@ class AppImage extends StatelessWidget {
     return Image(
       image: image,
       fit: fit,
-      errorBuilder: (_, _, _) => _Placeholder(color: placeholderColor),
+      errorBuilder: (_, _, _) => AppImagePlaceholder(color: placeholderColor),
       frameBuilder: (_, child, frame, wasSynchronouslyLoaded) {
         if (wasSynchronouslyLoaded || frame != null) return child;
 
-        return _Placeholder(color: placeholderColor);
-      },
-    );
-  }
-}
-
-class _Placeholder extends StatelessWidget {
-  const _Placeholder({required this.color});
-
-  final Color color;
-
-  @override
-  Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (_, constraints) {
-        final width = constraints.hasBoundedWidth ? constraints.maxWidth : 80.0;
-        final height = constraints.hasBoundedHeight
-            ? constraints.maxHeight
-            : width;
-
-        return SizedBox(
-          width: width,
-          height: height,
-          child: Center(
-            child: Icon(
-              Icons.image_outlined,
-              // Icon is 70% of the smaller side, so it reads clearly even in
-              // small cells and still scales up in big ones.
-              size: (width < height ? width : height) * 0.7,
-              color: color.withValues(alpha: 0.6),
-            ),
-          ),
-        );
+        return AppImagePlaceholder(color: placeholderColor);
       },
     );
   }

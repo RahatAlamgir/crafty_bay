@@ -45,7 +45,9 @@ class ProfileInfoTile extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w500,
-                    color: hasValue ? AppColors.textPrimary : AppColors.inputHint,
+                    color: hasValue
+                        ? AppColors.textPrimary
+                        : AppColors.inputHint,
                   ),
                 ),
               ],

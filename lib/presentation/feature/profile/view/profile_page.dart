@@ -6,7 +6,8 @@ import 'package:provider/provider.dart';
 
 import '../provider/profile_provider.dart';
 import '../widgets/profile_avatar.dart';
-import '../widgets/profile_info_tile.dart';
+import '../widgets/profile_error_view.dart';
+import '../widgets/profile_info_card.dart';
 import 'profile_edit_page.dart';
 
 /// Shows the signed-in user's details, with a button to edit them.
@@ -51,7 +52,7 @@ class _ProfilePageState extends State<ProfilePage> {
       return const Center(child: CircularProgressIndicator());
     }
     if (profile == null) {
-      return _ErrorView(
+      return ProfileErrorView(
         message: provider.errorMessage,
         onRetry: provider.fetchProfile,
       );
@@ -75,7 +76,7 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
           ),
           const SizedBox(height: 24),
-          _InfoCard(profile: profile),
+          ProfileInfoCard(profile: profile),
           const SizedBox(height: 24),
           ElevatedButton.icon(
             onPressed: () => _onEdit(profile),
@@ -83,88 +84,6 @@ class _ProfilePageState extends State<ProfilePage> {
             label: const Text(AppStrings.editProfile),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class _InfoCard extends StatelessWidget {
-  const _InfoCard({required this.profile});
-
-  final UserProfile profile;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-      decoration: BoxDecoration(
-        color: AppColors.cardBackground,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.border),
-      ),
-      child: Column(
-        children: [
-          ProfileInfoTile(
-            icon: Icons.email_outlined,
-            label: AppStrings.email,
-            value: profile.email,
-            trailing: Text(
-              profile.emailVerified
-                  ? AppStrings.verified
-                  : AppStrings.notVerified,
-              style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-                color: profile.emailVerified
-                    ? AppColors.success
-                    : AppColors.error,
-              ),
-            ),
-          ),
-          const Divider(height: 1, color: AppColors.divider),
-          ProfileInfoTile(
-            icon: Icons.phone_outlined,
-            label: AppStrings.mobile,
-            value: profile.phone,
-          ),
-          const Divider(height: 1, color: AppColors.divider),
-          ProfileInfoTile(
-            icon: Icons.location_city_outlined,
-            label: AppStrings.city,
-            value: profile.city,
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _ErrorView extends StatelessWidget {
-  const _ErrorView({required this.message, required this.onRetry});
-
-  final String message;
-  final VoidCallback onRetry;
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              message,
-              textAlign: TextAlign.center,
-              style: const TextStyle(color: AppColors.textSecondary),
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: onRetry,
-              child: const Text(AppStrings.retry),
-            ),
-          ],
-        ),
       ),
     );
   }

@@ -1,7 +1,8 @@
 import 'package:crafty_bay/domain/entities/product_details.dart';
 import 'package:flutter/material.dart';
 
-/// Presentation-only product detail used by the Product Details page until the API is wired.
+/// What the Product Details page shows for one product: the API data reshaped
+/// for the screen (price as a double, color names turned into swatch colors).
 class ProductDetailsUiModel {
   const ProductDetailsUiModel({
     this.id = '',
@@ -15,7 +16,7 @@ class ProductDetailsUiModel {
     required this.sizes,
   });
 
-  /// API product id; empty for the dummy sample (cart/wishlist disabled).
+  /// API product id; empty disables the cart and wish list buttons.
   final String id;
   final String title;
   final double price;

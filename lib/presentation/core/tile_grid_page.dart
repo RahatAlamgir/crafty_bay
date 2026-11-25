@@ -4,19 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'category_card.dart';
 import 'product_grid.dart';
-
-/// One tile of a [TileGridPage]: an icon, a name and what happens on tap.
-class TileItem {
-  final String iconUrl;
-  final String name;
-  final VoidCallback onTap;
-
-  const TileItem({
-    required this.iconUrl,
-    required this.name,
-    required this.onTap,
-  });
-}
+import 'tile_item.dart';
 
 /// Icon tiles in a 4-column grid under a titled app bar. Used for the
 /// Categories and Brands pages.
@@ -58,10 +46,7 @@ class TileGridPage extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(errorMessage),
-            TextButton(
-              onPressed: onRetry,
-              child: const Text(AppStrings.retry),
-            ),
+            TextButton(onPressed: onRetry, child: const Text(AppStrings.retry)),
           ],
         ),
       );

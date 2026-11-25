@@ -47,7 +47,8 @@ class _CreateReviewPageState extends State<CreateReviewPage> {
     // The new review changes this product's average on every product card.
     if (ok) context.read<RatingProvider>().fetchRatings();
     final message = ok ? AppStrings.reviewSubmitted : provider.errorMessage;
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(message)));
     if (ok) Navigator.pop(context);
   }
 

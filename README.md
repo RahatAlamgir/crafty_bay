@@ -79,11 +79,14 @@ crafty_bay/
         ├── core/                   Shared widgets: product card, grids, dialogs,
         │                           bottom bars, image with placeholder, and the
         │                           PagedProvider base class for paged lists
-        ├── model/                  UI-only models
-        └── feature/                One folder per feature, each split into
-            │                       provider/ (state), view/ (pages), widgets/
+        └── feature/                One folder per feature. Inside a feature:
+            │                       provider/ (state), view/ (pages),
+            │                       widgets/ (small widgets), and model/ when
+            │                       the screen needs its own UI model.
+            │                       One class per file (a StatefulWidget and
+            │                       its State class stay together).
             ├── splash/
-            ├── auth/               login, sign_up, otp_verfication, complete_profile
+            ├── auth/               login, sign_up, otp_verification, complete_profile
             ├── main/               Bottom-navigation shell (Home, Categories, Cart, Wish)
             ├── home/               Banner, categories, brands, products
             ├── categories/         Category list
@@ -91,6 +94,7 @@ crafty_bay/
             ├── product_list/       Products of a category, a brand, or a ranked list
             ├── search/
             ├── product_details/    Photos, color, size, quantity, add to cart
+            │                       (model/ holds the screen's UI model)
             ├── reviews/            Review list, star rating, ratings for cards
             ├── create_review/
             ├── cart/

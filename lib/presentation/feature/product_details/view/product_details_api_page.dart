@@ -3,7 +3,7 @@ import 'package:crafty_bay/core/app_strings.dart';
 import 'package:crafty_bay/presentation/feature/product_details/provider/product_details_provider.dart';
 import 'package:crafty_bay/presentation/feature/product_details/view/product_details_page.dart';
 import 'package:crafty_bay/presentation/feature/reviews/provider/review_provider.dart';
-import 'package:crafty_bay/presentation/model/product_details_ui_model.dart';
+import 'package:crafty_bay/presentation/feature/product_details/model/product_details_ui_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

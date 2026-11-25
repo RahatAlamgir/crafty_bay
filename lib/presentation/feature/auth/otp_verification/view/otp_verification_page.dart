@@ -6,9 +6,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
 import '../../complete_profile/view/complete_profile_page.dart';
-import '../widget/otp_input_row.dart';
+import '../widgets/otp_input_row.dart';
 import '../../provider/auth_provider.dart';
-import '../widget/otp_resend_timer.dart';
+import '../widgets/otp_resend_timer.dart';
 
 class OtpVerificationPage extends StatefulWidget {
   const OtpVerificationPage({

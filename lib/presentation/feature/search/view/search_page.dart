@@ -123,9 +123,7 @@ class _SearchPageState extends State<SearchPage> {
                   ),
             border: _border(BorderSide.none),
             enabledBorder: _border(BorderSide.none),
-            focusedBorder: _border(
-              const BorderSide(color: AppColors.primary),
-            ),
+            focusedBorder: _border(const BorderSide(color: AppColors.primary)),
           ),
         ),
       ),

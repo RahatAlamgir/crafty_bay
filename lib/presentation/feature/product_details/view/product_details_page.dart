@@ -13,7 +13,7 @@ import 'package:crafty_bay/presentation/feature/product_details/widgets/size_sel
 import 'package:crafty_bay/presentation/feature/reviews/provider/review_provider.dart';
 import 'package:crafty_bay/presentation/feature/reviews/view/reviews_page.dart';
 import 'package:crafty_bay/presentation/feature/wishlist/provider/wishlist_provider.dart';
-import 'package:crafty_bay/presentation/model/product_details_ui_model.dart';
+import 'package:crafty_bay/presentation/feature/product_details/model/product_details_ui_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

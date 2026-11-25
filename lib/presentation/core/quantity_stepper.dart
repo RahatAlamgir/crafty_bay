@@ -1,4 +1,5 @@
 import 'package:crafty_bay/core/app_colors.dart';
+import 'package:crafty_bay/presentation/core/quantity_step_button.dart';
 import 'package:flutter/material.dart';
 
 /// Compact "− 01 +" control for cart lines and the product details page.
@@ -24,7 +25,7 @@ class QuantityStepper extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        _StepButton(
+        QuantityStepButton(
           icon: Icons.remove,
           filled: false,
           onTap: quantity > min ? () => onChanged(quantity - 1) : null,
@@ -40,47 +41,12 @@ class QuantityStepper extends StatelessWidget {
             ),
           ),
         ),
-        _StepButton(
+        QuantityStepButton(
           icon: Icons.add,
           filled: true,
           onTap: quantity < max ? () => onChanged(quantity + 1) : null,
         ),
       ],
-    );
-  }
-}
-
-// WHY: private helper that only exists for QuantityStepper's two buttons.
-class _StepButton extends StatelessWidget {
-  const _StepButton({
-    required this.icon,
-    required this.filled,
-    required this.onTap,
-  });
-
-  final IconData icon;
-
-  /// Solid teal (+) vs. pale teal (−).
-  final bool filled;
-  final VoidCallback? onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        width: 22,
-        height: 22,
-        decoration: BoxDecoration(
-          color: filled ? AppColors.primary : AppColors.primaryLight,
-          borderRadius: BorderRadius.circular(3),
-        ),
-        child: Icon(
-          icon,
-          size: 16,
-          color: filled ? AppColors.textOnPrimary : AppColors.primary,
-        ),
-      ),
     );
   }
 }

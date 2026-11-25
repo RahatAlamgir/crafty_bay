@@ -57,10 +57,7 @@ class AuthProvider extends ChangeNotifier {
 
   Future<bool> resendOtp(String email) => _run(() => _service.resendOtp(email));
 
-  Future<bool> updateProfile({
-    required String phone,
-    required String city,
-  }) {
+  Future<bool> updateProfile({required String phone, required String city}) {
     return _run(() => _service.updateProfile(phone: phone, city: city));
   }
 
