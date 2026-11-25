@@ -6,21 +6,7 @@ A mobile e-commerce app built with **Flutter**. Browse products by category and 
 
 ## Screenshots
 
-| Splash | Login | Sign up | OTP |
-|:---:|:---:|:---:|:---:|
-| ![Splash](docs/screenshots/01-splash.png) | ![Login](docs/screenshots/02-login.png) | ![Sign up](docs/screenshots/03-signup.png) | ![OTP](docs/screenshots/04-otp.png) |
-
-| Home | Categories | Product list | Search |
-|:---:|:---:|:---:|:---:|
-| ![Home](docs/screenshots/05-home.png) | ![Categories](docs/screenshots/06-categories.png) | ![Product list](docs/screenshots/07-product-list.png) | ![Search](docs/screenshots/08-search.png) |
-
-| Product details | Reviews | Create review | Cart |
-|:---:|:---:|:---:|:---:|
-| ![Product details](docs/screenshots/09-product-details.png) | ![Reviews](docs/screenshots/10-reviews.png) | ![Create review](docs/screenshots/11-create-review.png) | ![Cart](docs/screenshots/12-cart.png) |
-
-| Wish list | Profile |
-|:---:|:---:|
-| ![Wish list](docs/screenshots/13-wishlist.png) | ![Profile](docs/screenshots/14-profile.png) |
+![CraftyBay screens: splash, login, sign up, OTP, home, categories, product list, product details, reviews, create review, cart and wish list](docs/screenshots/craftyBay.jpg)
 
 ## Features
 
@@ -54,54 +40,84 @@ Checkout and orders. The cart's **Checkout** button is a placeholder, so the app
 ## Project structure
 
 ```
-lib/
-├── app/            App widget, theme, and the list of providers
-├── core/           Colors, strings, asset paths, API endpoints, navigator key
-├── data/
-│   ├── model/      JSON -> object classes
-│   └── service/    One service per API area, plus network/ and cache/
-├── domain/
-│   └── entities/   Plain objects the UI works with (Product, CartItem, ...)
-└── presentation/
-    ├── core/       Shared widgets (product card, grid, dialogs, paging)
-    └── feature/    One folder per screen group: auth, home, cart, ...
-                    each with provider/ (state), view/ (pages), widgets/
+crafty_bay/
+├── assets/images/              Logos and bundled images
+├── docs/screenshots/           Screenshot used in this README
+├── android/  ios/              Platform projects
+├── pubspec.yaml                Dependencies and assets
+├── .env.example                Template for the local .env file
+└── lib/
+    ├── main.dart               Entry point: loads .env, opens storage, runs the app
+    │
+    ├── app/                    App-level setup
+    │   ├── crafty_bay_app.dart     Root MaterialApp
+    │   ├── app_theme.dart          Colors, fonts, input and button styles
+    │   └── app_providers.dart      Every app-wide provider, in one list
+    │
+    ├── core/                   Shared constants, no logic
+    │   ├── app_colors.dart         Color tokens
+    │   ├── app_strings.dart        All text shown in the app
+    │   ├── app_assets.dart         Asset paths
+    │   ├── end_points.dart         API URLs
+    │   └── app_navigator.dart      Global navigator key (used by the 401 redirect)
+    │
+    ├── data/                   Talks to the outside world
+    │   ├── model/                  JSON -> objects (product, cart item, review, ...)
+    │   └── service/
+    │       ├── network/            NetworkCaller (the only class using `http`),
+    │       │                       auth headers, response type, request logging,
+    │       │                       session-expired hook
+    │       ├── cache/              CacheService: saves the login token on the device
+    │       └── *_service.dart      One service per API area: auth, brand, category,
+    │                               product, review, cart, wishlist, slide
+    │
+    ├── domain/
+    │   └── entities/           Plain objects the UI works with
+    │                           (Product, CartItem, Review, PageResult, ...)
+    │
+    └── presentation/           Everything the user sees
+        ├── core/                   Shared widgets: product card, grids, dialogs,
+        │                           bottom bars, image with placeholder, and the
+        │                           PagedProvider base class for paged lists
+        ├── model/                  UI-only models
+        └── feature/                One folder per feature, each split into
+            │                       provider/ (state), view/ (pages), widgets/
+            ├── splash/
+            ├── auth/               login, sign_up, otp_verfication, complete_profile
+            ├── main/               Bottom-navigation shell (Home, Categories, Cart, Wish)
+            ├── home/               Banner, categories, brands, products
+            ├── categories/         Category list
+            ├── brands/             Brand list
+            ├── product_list/       Products of a category, a brand, or a ranked list
+            ├── search/
+            ├── product_details/    Photos, color, size, quantity, add to cart
+            ├── reviews/            Review list, star rating, ratings for cards
+            ├── create_review/
+            ├── cart/
+            ├── wishlist/
+            └── profile/            View and edit profile
 ```
 
-A few design choices:
+### How the layers connect
 
-- **Layers:** the UI talks to providers, providers talk to services, and only `NetworkCaller` touches the `http` package.
+```
+ Page (view)  ->  Provider  ->  Service  ->  NetworkCaller  ->  REST API
+     ^               |             |
+     |               |             +-- Model: JSON -> Entity
+     +-- rebuilds <--+
+```
+
+- A **page** shows data and reacts to taps. It never calls the API itself.
+- A **provider** holds the state of one feature (loading, error, data) and notifies the page when it changes.
+- A **service** knows one API area: which URL to call and how to read the answer.
+- **NetworkCaller** is the only code that uses the `http` package. It adds timeouts, logging and error handling.
+
+### Design choices
+
 - **Pagination:** `PagedProvider` is a reusable base class, so every long list loads page by page the same way.
-- **Errors:** the API's `{"msg": "..."}` errors are shown as readable messages.
+- **Errors:** the API's `{"msg": "..."}` errors are shown as readable messages, with a Retry button where it makes sense.
 - **Auth:** the API expects the JWT in a `token` header, not `Authorization: Bearer`. A 401 on any signed-in request clears the token and opens the login page.
-
-## Getting started
-
-**Requirements:** [Flutter](https://docs.flutter.dev/get-started/install) (stable) and an Android device or emulator.
-
-```bash
-git clone https://github.com/RahatAlamgir/crafty_bay.git
-cd crafty_bay
-cp .env.example .env      # on Windows PowerShell: Copy-Item .env.example .env
-flutter pub get
-flutter run
-```
-
-Open `.env` and set `BASE_URL` to the API address from the course's `simple-ecommerce` Postman collection (the `BASE` variable). The app will not start without it.
-
-```
-BASE_URL=<your API base url>
-```
-
-> The API is hosted on a free tier, so the **first request after a quiet period can take 30 to 60 seconds** while the server wakes up. If the home screen keeps loading, wait a minute and reopen the app.
-
-### Build an APK
-
-```bash
-flutter build apk --release
-```
-
-The file is created at `build/app/outputs/flutter-apk/app-release.apk`. Ready-made APKs are on the [Releases](https://github.com/RahatAlamgir/crafty_bay/releases) page.
+- **Shared values in one place:** app colors, text, asset paths and API URLs live in `core/` instead of being repeated in widgets.
 
 ## API
 
