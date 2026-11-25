@@ -1,4 +1,7 @@
 import 'package:crafty_bay/core/app_assets.dart';
+import 'package:crafty_bay/core/app_strings.dart';
+import 'package:crafty_bay/data/service/cache/cache_service.dart';
+import 'package:crafty_bay/presentation/core/confirm_dialog.dart';
 import 'package:crafty_bay/presentation/feature/auth/auth_redirect.dart';
 import 'package:crafty_bay/presentation/feature/auth/provider/auth_provider.dart';
 import 'package:crafty_bay/presentation/feature/cart/provider/cart_provider.dart';
@@ -22,6 +25,14 @@ class HomeAppBar extends StatelessWidget {
   }
 
   Future<void> _onLogout(BuildContext context) async {
+    final confirmed = await showConfirmDialog(
+      context,
+      title: AppStrings.logoutTitle,
+      message: AppStrings.logoutMessage,
+      confirmLabel: AppStrings.logout,
+      destructive: true,
+    );
+    if (!confirmed || !context.mounted) return;
     final auth = context.read<AuthProvider>();
     final cart = context.read<CartProvider>();
     final wishlist = context.read<WishlistProvider>();
@@ -50,10 +61,17 @@ class HomeAppBar extends StatelessWidget {
           const SizedBox(width: 8),
           const HomeCircleIconButton(icon: Icons.notifications_none),
           const SizedBox(width: 8),
-          HomeCircleIconButton(
-            icon: Icons.logout,
-            onTap: () => _onLogout(context),
-          ),
+          // Logged out: offer Login instead of a Logout that does nothing.
+          if (CacheService.isLoggedIn)
+            HomeCircleIconButton(
+              icon: Icons.logout,
+              onTap: () => _onLogout(context),
+            )
+          else
+            HomeCircleIconButton(
+              icon: Icons.login,
+              onTap: AuthRedirect.toLogin,
+            ),
         ],
       ),
     );

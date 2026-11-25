@@ -142,6 +142,9 @@ class AppStrings {
   static const String removeFromWishlistTitle = 'Remove from wish list?';
   static const String removeFromWishlistMessage =
       'This item will be removed from your wish list.';
+  static const String logoutTitle = 'Log out?';
+  static const String logoutMessage = 'Are you sure you want to log out?';
+  static const String logout = 'Log out';
 
   static const String retry = 'Retry';
 

@@ -1,6 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Release builds need this too; without it every API call fails. -->
+    <uses-permission android:name="android.permission.INTERNET"/>
     <application
-        android:label="crafty_bay"
+        android:label="CraftyBay"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
