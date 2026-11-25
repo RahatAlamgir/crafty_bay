@@ -25,15 +25,20 @@ class ProductService {
         .toList();
   }
 
+  /// Products per request when loading the whole catalogue. The server honours
+  /// `count`, so a small shop arrives in one request instead of many.
+  static const _catalogPageSize = 100;
+
   /// The whole catalogue, all pages at once.
   ///
   /// Only Search uses this, because the server has no text search and the
   /// app has to filter on the phone. Product lists load page by page with
   /// [getProductPage] instead.
   Future<List<Product>> getAllProducts() async {
-    final first = await getProductPage(1);
+    final first = await getProductPage(1, count: _catalogPageSize);
     final rest = await Future.wait([
-      for (var n = 2; n <= first.lastPage; n++) getProductPage(n),
+      for (var n = 2; n <= first.lastPage; n++)
+        getProductPage(n, count: _catalogPageSize),
     ]);
 
     return [first, ...rest].expand((p) => p.items).toList();
@@ -45,10 +50,16 @@ class ProductService {
     int page, {
     String? categoryId,
     String? brandId,
+    int? count,
   }) async {
     final response = await _networkCaller.get(
       Uri.parse(
-        EndPoints.productsPage(page, categoryId: categoryId, brandId: brandId),
+        EndPoints.productsPage(
+          page,
+          categoryId: categoryId,
+          brandId: brandId,
+          count: count,
+        ),
       ),
       headers: {'accept': 'application/json'},
     );

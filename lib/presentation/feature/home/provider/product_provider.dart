@@ -14,6 +14,12 @@ class ProductProvider extends ChangeNotifier {
   String _errorMessage = '';
   String get errorMessage => _errorMessage;
 
+  List<Product> _catalog = [];
+
+  /// Every product, not just the first page. Home rows that pick products by
+  /// a rule (Popular) choose from this list.
+  List<Product> get catalog => _catalog;
+
   Future<void> fetchProducts() async {
     _isLoading = true;
     notifyListeners();
@@ -26,5 +32,14 @@ class ProductProvider extends ChangeNotifier {
       _isLoading = false;
       notifyListeners();
     }
+  }
+
+  /// Loads the whole catalogue (a single request for a small shop). A
+  /// failure just leaves the rows that depend on it hidden.
+  Future<void> fetchCatalog() async {
+    try {
+      _catalog = await _service.getAllProducts();
+      notifyListeners();
+    } catch (_) {}
   }
 }

@@ -25,23 +25,34 @@ class EndPoints {
 
   // --- Products ---
   static String get products => '$baseUrl/products';
+
   /// One page of products, optionally only those of a category and/or brand.
-  static String productsPage(int page, {String? categoryId, String? brandId}) {
+  static String productsPage(
+    int page, {
+    String? categoryId,
+    String? brandId,
+    int? count,
+  }) {
     final query = {
       'page': '$page',
       'category': ?categoryId,
       'brand': ?brandId,
+      'count': ?count?.toString(),
     };
 
-    return Uri.parse('$baseUrl/products').replace(queryParameters: query).toString();
+    return Uri.parse('$baseUrl/products')
+        .replace(queryParameters: query)
+        .toString();
   }
+
   static String productBySlug(String slug) => '$baseUrl/products/$slug';
   static String productById(String id) => '$baseUrl/products/id/$id';
 
   // --- Reviews ---
   static String get reviews => '$baseUrl/reviews'; // GET ?product=<id>
-  static String reviewsPage(String productId, int page) =>
-      '$baseUrl/reviews?product=$productId&page=$page';
+  static String reviewsPage(String productId, int page, {int? count}) =>
+      '$baseUrl/reviews?product=$productId&page=$page'
+      '${count == null ? '' : '&count=$count'}';
   static String get createReview => '$baseUrl/review';
   static String review(String id) => '$baseUrl/reviews/$id'; // PATCH, DELETE
 

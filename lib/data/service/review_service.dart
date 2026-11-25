@@ -22,23 +22,52 @@ class ReviewService {
   /// caller wants all of them.
   static const _anyProduct = '000000000000000000000000';
 
-  /// Every review of every product, all pages.
-  Future<List<Review>> getAllReviews() async {
-    final first = await _getPage(1);
-    final pages = await Future.wait([
-      for (var page = 2; page <= first.lastPage; page++) _getPage(page),
-    ]);
+  /// Reviews per request. The server honours `count`, so the whole list
+  /// normally arrives in one request instead of one request per 10 reviews.
+  static const _pageSize = 100;
 
-    return [first, ...pages].expand((p) => p.reviews).toList();
+  /// How long the downloaded list is reused before asking the server again.
+  static const _maxAge = Duration(minutes: 2);
+
+  // Shared by every ReviewService instance: the home cards, the details page
+  // and the reviews page all read the same download.
+  static List<Review>? _cache;
+  static DateTime? _cachedAt;
+  static Future<List<Review>>? _inFlight;
+
+  /// Every review of every product. Reuses a recent download (and any request
+  /// already running); pass [forceRefresh] to go to the server.
+  Future<List<Review>> getAllReviews({bool forceRefresh = false}) {
+    final cached = _cache;
+    final fresh =
+        _cachedAt != null && DateTime.now().difference(_cachedAt!) < _maxAge;
+    if (!forceRefresh && cached != null && fresh) return Future.value(cached);
+
+    return _inFlight ??= _download().whenComplete(() => _inFlight = null);
   }
 
   /// Reviews of one product, newest first.
-  Future<List<Review>> getProductReviews(String productId) async {
-    final all = await getAllReviews();
+  Future<List<Review>> getProductReviews(
+    String productId, {
+    bool forceRefresh = false,
+  }) async {
+    final all = await getAllReviews(forceRefresh: forceRefresh);
     final reviews = all.where((r) => r.productId == productId).toList();
     reviews.sort((a, b) => _time(b).compareTo(_time(a)));
 
     return reviews;
+  }
+
+  Future<List<Review>> _download() async {
+    final first = await _getPage(1);
+    final rest = await Future.wait([
+      for (var page = 2; page <= first.lastPage; page++) _getPage(page),
+    ]);
+    final all = [first, ...rest].expand((p) => p.reviews).toList();
+    _cache = all;
+    _cachedAt = DateTime.now();
+
+    return all;
   }
 
   Future<void> createReview({
@@ -52,11 +81,14 @@ class ReviewService {
       body: {'product': productId, 'rating': rating, 'comment': comment},
     );
     if (response.isSuccess != true) throw Exception(response.errorMessage);
+    // The list changed on the server, so the saved copy is out of date.
+    _cache = null;
+    _cachedAt = null;
   }
 
   Future<_ReviewPage> _getPage(int page) async {
     final response = await _networkCaller.get(
-      Uri.parse(EndPoints.reviewsPage(_anyProduct, page)),
+      Uri.parse(EndPoints.reviewsPage(_anyProduct, page, count: _pageSize)),
       headers: {'accept': 'application/json'},
     );
     if (response.isSuccess != true) throw Exception(response.errorMessage);

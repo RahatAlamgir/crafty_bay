@@ -100,7 +100,7 @@ class AppStrings {
   static const String allCategories = 'All Categories';
   static const String brand = 'Brand';
   static const String product = 'Product';
-  static const String newArrival = 'New';
+  static const String popular = 'Popular';
 
   // --- Home ---
   static const String bannerTitle = 'Happy New Year\nSpecial Deal\nSave 30%';

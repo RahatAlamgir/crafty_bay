@@ -34,7 +34,10 @@ class ApiProductCard extends StatelessWidget {
     BuildContext context,
     WishlistProvider wishlist,
   ) async {
-    if (wishlist.isWished(product.id)) {
+    // Taken before the awaits so no BuildContext is used after them.
+    final messenger = ScaffoldMessenger.of(context);
+    final wasWished = wishlist.isWished(product.id);
+    if (wasWished) {
       final confirmed = await showConfirmDialog(
         context,
         title: AppStrings.removeFromWishlistTitle,
@@ -44,7 +47,20 @@ class ApiProductCard extends StatelessWidget {
       );
       if (!confirmed) return;
     }
-    await wishlist.toggle(product.id);
+    final ok = await wishlist.toggle(product.id);
+    messenger
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(
+          content: Text(
+            !ok
+                ? wishlist.errorMessage
+                : wasWished
+                ? AppStrings.removedFromWishlist
+                : AppStrings.addedToWishlist,
+          ),
+        ),
+      );
   }
 
   @override

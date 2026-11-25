@@ -12,10 +12,14 @@ class HomeApiProductSection extends StatelessWidget {
     super.key,
     required this.title,
     required this.products,
+    this.onSeeAllTap,
   });
 
   final String title;
   final List<Product> products;
+
+  /// Replaces the default "See All" (the paged list of every product).
+  final VoidCallback? onSeeAllTap;
 
   /// The home row only holds the first page of products, so "See All" opens
   /// a page that loads every product from the server.
@@ -33,7 +37,7 @@ class HomeApiProductSection extends StatelessWidget {
     return ProductSection(
       title: title,
       seeAllLabel: AppStrings.seeAll,
-      onSeeAllTap: () => _openAll(context),
+      onSeeAllTap: onSeeAllTap ?? () => _openAll(context),
       itemCount: products.length,
       itemBuilder: (_, i) =>
           ApiProductCard(product: products[i], width: cardWidth),

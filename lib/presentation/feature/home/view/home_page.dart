@@ -1,7 +1,8 @@
 import 'package:crafty_bay/core/app_colors.dart';
 import 'package:crafty_bay/core/app_strings.dart';
 import 'package:crafty_bay/domain/entities/category.dart';
-import 'package:crafty_bay/presentation/data/dummy_data.dart';
+import 'package:crafty_bay/domain/entities/product.dart';
+import 'package:crafty_bay/presentation/feature/product_list/view/curated_products_page.dart';
 import 'package:crafty_bay/presentation/feature/categories/provider/category_provider.dart';
 import 'package:crafty_bay/presentation/feature/home/provider/brand_provider.dart';
 import 'package:crafty_bay/presentation/feature/home/provider/product_provider.dart';
@@ -15,7 +16,6 @@ import 'package:crafty_bay/presentation/feature/product_list/view/product_list_p
 import 'package:crafty_bay/presentation/feature/home/widgets/home_app_bar.dart';
 import 'package:crafty_bay/presentation/feature/home/widgets/home_banner_carousel.dart';
 import 'package:crafty_bay/presentation/feature/home/widgets/home_category_section.dart';
-import 'package:crafty_bay/presentation/feature/home/widgets/home_product_section.dart';
 import 'package:crafty_bay/presentation/feature/home/widgets/home_search_bar.dart';
 import 'package:crafty_bay/presentation/feature/reviews/provider/rating_provider.dart';
 import 'package:crafty_bay/presentation/feature/search/view/search_page.dart';
@@ -38,7 +38,9 @@ class _HomePageState extends State<HomePage> {
       Provider.of<SlideProvider>(context, listen: false).fetchSlides();
       Provider.of<CategoryProvider>(context, listen: false).fetchCategories();
       Provider.of<BrandProvider>(context, listen: false).fetchBrands();
-      Provider.of<ProductProvider>(context, listen: false).fetchProducts();
+      Provider.of<ProductProvider>(context, listen: false)
+        ..fetchProducts()
+        ..fetchCatalog();
       Provider.of<RatingProvider>(context, listen: false).fetchRatings();
     });
   }
@@ -71,6 +73,16 @@ class _HomePageState extends State<HomePage> {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (_) => const BrandsPage()),
+    );
+  }
+
+  void _openPopular(BuildContext context, List<Product> products) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) =>
+            CuratedProductsPage(title: AppStrings.popular, products: products),
+      ),
     );
   }
 
@@ -145,9 +157,21 @@ class _HomePageState extends State<HomePage> {
                 );
               },
             ),
-            const HomeProductSection(
-              title: AppStrings.newArrival,
-              products: DummyData.products,
+            Consumer2<ProductProvider, RatingProvider>(
+              builder: (_, products, ratings, _) {
+                final byId = {for (final p in products.catalog) p.id: p};
+                final popular = [
+                  for (final id in ratings.popularIds)
+                    if (byId[id] != null) byId[id]!,
+                ];
+                if (popular.isEmpty) return const SizedBox.shrink();
+
+                return HomeApiProductSection(
+                  title: AppStrings.popular,
+                  products: popular.take(10).toList(),
+                  onSeeAllTap: () => _openPopular(context, popular),
+                );
+              },
             ),
           ],
         ),
